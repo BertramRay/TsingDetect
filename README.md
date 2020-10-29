@@ -3,7 +3,7 @@
  + 该项目由清华大学生物医学检测原理与传感技术课程小组共同参与开发，作者：雷梓阳，李子涵，张宇翔，李梓瑜。
  + 该项目文档编写初衷在于利用课程机制对项目进行增量迭代开发。我们认为，两周时间过于短暂，如果进行多次迭代，可以做出更好的作品。
  + 该项目遵循GPL3.0协议。 
- [实物图](https://github.com/BertramRay/TsingDetect/blob/main/%E5%AE%9E%E7%89%A9%E5%9B%BE.jpg?raw=true)
+ + ![实物图](https://github.com/BertramRay/TsingDetect/blob/main/%E5%AE%9E%E7%89%A9%E5%9B%BE.jpg?raw=true)
 ## 快速上手
  如果你想基于此项目进行进一步开发，请先确保你具有如下条件。遇到问题请通过邮箱1034495527@qq.com与我取得联系。
 ### 硬件准备
