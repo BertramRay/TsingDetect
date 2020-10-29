@@ -6,7 +6,7 @@
 ## 快速上手
  如果你想基于此项目进行进一步开发，请先确保你具有如下条件。遇到问题请通过邮箱1034495527@qq.com与我取得联系。
 ### 硬件准备
- 1. [Arduino UNO](开发板https://item.taobao.com/item.htm?spm=a1z09.2.0.0.5a472e8d88lSyI&id=584296186027&_u=t2dv10j1b0b7)
+ 1. [Arduino UNO](https://item.taobao.com/item.htm?spm=a1z09.2.0.0.5a472e8d88lSyI&id=584296186027&_u=t2dv10j1b0b7)
  2. [MAX30102心率检测模块](https://item.taobao.com/item.htm?spm=a1z09.2.0.0.5a472e8d88lSyI&id=586401173804&_u=t2dv10j14add)
  3. [MLX90614非接触式红外体温监测模块](https://item.taobao.com/item.htm?spm=a1z09.2.0.0.5a472e8d88lSyI&id=543843511522&_u=t2dv10j10aaa)
  4. [杜邦线公对公，母对母，公对母10cm各40pin](https://item.taobao.com/item.htm?spm=a1z09.2.0.0.5a472e8d88lSyI&id=558182761958&_u=t2dv10j18823)
