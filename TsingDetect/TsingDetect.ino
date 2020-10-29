@@ -19,9 +19,19 @@ Operation Description
 3. Press Button 3 on app:
     Switch to the pulse wave mode. After blue LED
     lights, put you index finger on the sensor.
-    About 4 seconds later, your PC serial ploter will receive
-    the IR data and we will show this data using 
-    immediate line diagram.
+    About 4 seconds later, your PC serial ploter 
+    will receive the IR data and we will show this 
+    data using immediate line diagram.
+4. Press Button 4 on app:
+    Close the detection modules to save the power.
+5. Press Button 5 on app:
+    Open/Close the LED display module.
+6. Press Button 6 on app:
+    Open/Close the buzzer display module.
+7. Press Button 7 on app:
+    Restart the software using soft methods. You can 
+    also press the restart button on the Arduino uno 
+    board to restart it.
  ****************************************************/
 
 #include <Wire.h>
@@ -48,15 +58,15 @@ SoftwareSerial softSerial1(bluetooth_transmit,bluetooth_receive);
 Adafruit_MLX90614 mlx = Adafruit_MLX90614();
 
 //heart_rate_data
-const byte RATE_SIZE = 10; //Increase this for more averaging. 4 is good.
+const byte RATE_SIZE = 10; //Increase this for more averaging. 4 is good, 10 is better.
 byte rates[RATE_SIZE]; //Array of heart rates
 byte rateSpot = 0;
 long lastBeat = 0; //Time at which the last beat occurred
 float beatsPerMinute;
 int beatAvg = 0;
 int lastBeatAvg = 0;
-int i = 0;
-int count = 0;
+int IR_detect_count = 0;
+
 boolean rate_validation_flag = 0;
 
 //temperature data
@@ -66,7 +76,8 @@ const int t_size = 30;
 double last_tb = 0;
 boolean temperature_validation_flag = 0;
 
-
+//global flags
+int loop_count = 0;
 int mode=1;
 boolean LED_mode=0;
 boolean beep_mode=0;
@@ -80,6 +91,7 @@ void beep(){
       digitalWrite(buzzer, HIGH);
     }
 }
+
 void(* resetFunc) (void) = 0;
 
 void setup() {
@@ -117,26 +129,31 @@ void setup() {
 void loop() {
   if(mode==1){
     long irValue = particleSensor.getIR();
-    count++;
-    if(count==10){
+    loop_count++;
+    
+    //use loop_count to control the beep time and LED shining time
+    if(loop_count==10){
       digitalWrite(LED_red, LOW);
       digitalWrite(LED_blue, LOW);
       digitalWrite(LED_green, LOW);
     }
-    if(count==3){
+    if(loop_count==3){
       digitalWrite(buzzer, HIGH);
     }
+    
     if (checkForBeat(irValue) == true)
     {
       //We sensed a beat!
       long delta = millis() - lastBeat;
       lastBeat = millis();
-  
       beatsPerMinute = 60 / (delta / 1000.0);
-  
+      //discard abnormal BPM data
       if (beatsPerMinute < 255 && beatsPerMinute > 20)
       {
         if(LED_mode){
+          // red light: low BPM
+          // green light: normal BPM
+          // blue light: high BPM
           if(beatsPerMinute > 20&&beatsPerMinute <= 45){
             digitalWrite(LED_red, HIGH);
           }else if(beatsPerMinute > 45&&beatsPerMinute <= 100){
@@ -148,16 +165,17 @@ void loop() {
         if(beep_mode){
           digitalWrite(buzzer, LOW);
         }
-        count=0;
+        loop_count=0;
+        
         rates[rateSpot++] = (byte)beatsPerMinute; //Store this reading in the array
         rateSpot %= RATE_SIZE; //Wrap variable
-  
         //Take average of readings
         lastBeatAvg = beatAvg;
         beatAvg = 0;
         for (byte x = 0 ; x < RATE_SIZE ; x++)
           beatAvg += rates[x];
         beatAvg /= RATE_SIZE;
+        
         if(rate_validation_flag == 0){
           if((beatsPerMinute-beatAvg)<3&&(beatsPerMinute-beatAvg)>-3&&(lastBeatAvg-beatAvg)<3&&(lastBeatAvg-beatAvg)>-3){
             softSerial1.print("心率已经稳定，可以读取心率数据。推荐心率读数: ");
@@ -173,7 +191,7 @@ void loop() {
 
       }
     }
-    if(i%200==0){
+    if(IR_detect_count%200==0){
       softSerial1.print("瞬时心率=");
       softSerial1.print(beatsPerMinute);
       softSerial1.print(", 平均心率=");
@@ -186,7 +204,7 @@ void loop() {
     
       softSerial1.println();
     }
-    i++;
+    IR_detect_count++;
   }else if(mode==2){
     for(int i=0;i<t_size;i++){
       delay(100);
@@ -293,5 +311,4 @@ void loop() {
       resetFunc();
     }
   }
-  
 }
